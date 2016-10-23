@@ -2,14 +2,13 @@
 <html>
 <head>
 <title>俄罗斯方块</title>
-<link rel="stylesheet" type="text/css" href="">
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
 <style>
 body{
     margin:0;
     padding:0;
-    background: url("./bg.jpg");
+    background: url("https://raw.githubusercontent.com/Samlin901211/img/master/tetris/bg.jpg");
     background-size:cover; 
 }
 .container {
@@ -76,9 +75,9 @@ body{
 </head>
 <body>
 <div class="container"></div>
-<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>   
-<script src="./dist/config.js"></script>  
+<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>    
 <script type="text/javascript">
+//思路如下：我用了map[][]和movingEles[]数组存放页面上的方块，map[][]存放的是固定在页面上的方块的颜色值,movingEles[]存放的是正在移动方块的坐标,利用setInterval来控制速度。页面在初始化的时候会把所有方块加载好，之后都是通过map[][]和movingEles[]里的值来进行绘制。而键盘事件都是使用了事件委托。
 
 //事件托管
 var Event = (function(){
@@ -108,6 +107,86 @@ var gameManager =(function() {
     var istwinking = false; //是否在闪烁，即正在加载消去动画
     var pause = false; //是否游戏暂停
     var next = types[Math.round(Math.random() * (types.length-1))];//下一个方块
+    
+    //获取游戏的配置
+    function getConfig() {
+      var types = [ //方块类型 block:是坐标 color:是颜色 point： 是旋转点
+        { 
+          block : [[0,0],[0,1],[1,0],[2,0]], 
+          color : "red",
+          point : 0 
+        },
+        { 
+          block : [[0,0],[-1,0],[1,0],[0,-1]],
+          color : "green",
+          point : 0
+        },
+        { 
+          block : [[0,0],[-1,1],[0,1],[1,0]],
+          color : "lightblue",
+          point : 0
+        },
+        { 
+          block : [[0,0],[1,0],[2,0],[3,0]],
+          color : "grey",
+          point : 1
+        },
+        { 
+          block : [[0,0],[0,-1],[-1,-1],[-2,-1]],
+          color : "pink",
+          point : 1
+        },
+        { 
+          block : [[0,0],[0,-1],[-1,-1],[1,0]],
+          color : "yellowgreen",
+          point : 0
+        },
+        { 
+          block : [[0,0],[1,0],[1,-1],[0,-1]],
+          color : "brown",
+          point : -1
+        },
+      ];
+      
+      //重新调整坐标位置，把上面的相对定位的坐标调整到一会儿游戏区域对应的坐标，主要是为了让方块类型能更快速的创建
+      function reCoordinate() {
+        for(var j=0;j<types.length;j++) {
+          var minTop = 9999;//找出四个方块中最小的top值，一会儿会进行平移
+              var minLeft = 9999;//找出四个方块中最小的left值，一会儿会进行平移
+              var minRight = -9999;//找出四个方块中最大的left值，一会儿会进行平移
+              var type = types[j].block;
+              for(var i=0;i<type.length;i++) {
+                  var item = type[i];
+                  var left = item[0];
+                  var top = item[1];
+                  if(top < minTop) {
+                      minTop = top;
+                  }
+                  if(left > minRight) {
+                      minRight = left;
+                  }
+                  if(left < minLeft) {
+                      minLeft = left;
+                  }
+              }
+              for(var i=0;i<type.length;i++) {
+                   var item = type[i];
+                   var left = item[0];
+                   var top = item[1];
+                   var length = minRight - minLeft + 1;//方块长度
+                   var left = left + Math.round((10 - length) / 2) - minLeft;//左右偏移量
+                   type[i][0] = left;
+                   type[i][1] = top - minTop;
+              }
+        }
+      }
+        
+      reCoordinate();
+      return {
+        types : types,
+        speed : 1000
+      }
+    }
 
     //判断是否能移动
     //参数 direction:移动方向
@@ -549,84 +628,6 @@ $(document).keydown(function(event){
 });
 
 gameManager.init();//开始游戏
-
-function getConfig() {
-  var types = [ //方块类型
-    { 
-      block : [[0,0],[0,1],[1,0],[2,0]], 
-      color : "red",
-      point : 0
-    },
-    { 
-      block : [[0,0],[-1,0],[1,0],[0,-1]],
-      color : "green",
-      point : 0
-    },
-    { 
-      block : [[0,0],[-1,1],[0,1],[1,0]],
-      color : "lightblue",
-      point : 0
-    },
-    { 
-      block : [[0,0],[1,0],[2,0],[3,0]],
-      color : "grey",
-      point : 1
-    },
-    { 
-      block : [[0,0],[0,-1],[-1,-1],[-2,-1]],
-      color : "pink",
-      point : 1
-    },
-    { 
-      block : [[0,0],[0,-1],[-1,-1],[1,0]],
-      color : "yellowgreen",
-      point : 0
-    },
-    { 
-      block : [[0,0],[1,0],[1,-1],[0,-1]],
-      color : "brown",
-      point : -1
-    },
-  ];
-
-  function reCoordinate() {
-    for(var j=0;j<types.length;j++) {
-      var minTop = 9999;//找出四个方块中最小的top值，一会儿会进行平移
-          var minLeft = 9999;//找出四个方块中最小的left值，一会儿会进行平移
-          var minRight = -9999;//找出四个方块中最大的left值，一会儿会进行平移
-          var type = types[j].block;
-          for(var i=0;i<type.length;i++) {
-              var item = type[i];
-              var left = item[0];
-              var top = item[1];
-              if(top < minTop) {
-                  minTop = top;
-              }
-              if(left > minRight) {
-                  minRight = left;
-              }
-              if(left < minLeft) {
-                  minLeft = left;
-              }
-          }
-          for(var i=0;i<type.length;i++) {
-               var item = type[i];
-               var left = item[0];
-               var top = item[1];
-               var length = minRight - minLeft + 1;//方块长度
-               var left = left + Math.round((10 - length) / 2) - minLeft;//左右偏移量
-               type[i][0] = left;
-               type[i][1] = top - minTop;
-          }
-    }
-  }
-    
-  reCoordinate();
-  return {
-    types : types,
-    speed : 1000
-  }
-}
 </script>
 </body>
 </html>
