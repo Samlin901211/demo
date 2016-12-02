@@ -1,0 +1,563 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>五子棋</title>
+    <style>
+        #chess {
+            display:block;
+            margin: 50px auto;
+            box-shadow: -2px -2px 2px #efefef, 5px 5px 5px #b9b9b9;
+            background:rgb(255,140,0);
+        }    
+    </style>
+</head>
+<body>
+   <canvas id="chess" width="450px" height="450px"></canvas>   
+   <script type="text/javascript" charset="utf-8">
+        var AI = (function() { 
+           var directionMap = {
+               top:1,
+               bottom:2,
+               left:3,
+               right:4,
+               left_top:5,
+               left_bottom:6,
+               right_top:7,
+               right_bottom:8
+           } 
+           //计算权重 
+           //chessColor 1黑 或 2白
+           function computeWeight(i,j) {
+               //获取游戏参数
+               var gameinfo = GameControl.getInfo();
+               //棋盘大小
+               var board_size = gameinfo.board_size;
+               var weight = (board_size-1) - (Math.abs(i - board_size >> 1) + Math.abs(j - board_size >> 1)); //基于棋盘位置权重（越靠近棋盘中心权重越大）  
+               //棋子颜色 
+               var chessColor = gameinfo.chessColor;
+               var aiColor = chessColor.ai;
+               var playerColor = chessColor.player;
+               var info;
+               //1.计算水平方向Ai权重
+               info =  getNextInfoX(i,j,aiColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,true);
+               //2.计算水平方向player权重
+               info = getNextInfoX(i,j,playerColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,false);
+               //3.计算垂直方向Ai权重
+               info =  getNextInfoY(i,j,aiColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,true);
+               //4.计算垂直方向player权重
+               info = getNextInfoY(i,j,playerColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,false);
+               //5.计算左斜方向Ai权重
+               info =  getNextInfoXY(i,j,aiColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,true);
+               //6.计算左斜方向player权重
+               info = getNextInfoXY(i,j,playerColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,false);
+               //7.计算右斜方向Ai权重
+               info =  getNextInfoYX(i,j,aiColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,true);
+               //8.计算右斜方向player权重
+               info = getNextInfoYX(i,j,playerColor);
+               weight += weightStatus(info.sideLeft,info.sideRight,info.num,false);
+
+               return weight;
+           }
+           //水平方向
+           function getNextInfoX(i,j,chessColor) {
+               var num = 1;
+               var sideLeft = false;
+               var sideRight = false;
+               for(var start=i-1;start>=0;start--) {
+                    var color = GameControl.hasChess(start,j);
+                    if(!color) {
+                        sideLeft = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+
+               for(var start=i+1;start<15;start++) {
+                    var color = GameControl.hasChess(start,j);
+                    if(!color) {
+                        sideRight = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+               return {
+                   sideLeft:sideLeft,
+                   sideRight:sideRight,
+                   num:num
+               }
+           } 
+           //垂直方向
+           function getNextInfoY(i,j,chessColor) {
+               var num = 1;
+               var sideLeft = false;
+               var sideRight = false;
+               for(var start=j-1;start>=0;start--) {
+                    var color = GameControl.hasChess(i,start);
+                    if(!color) {
+                        sideLeft = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+
+               for(var start=j+1;start<15;start++) {
+                    var color = GameControl.hasChess(i,start);
+                    if(!color) {
+                        sideRight = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+               return {
+                   sideLeft:sideLeft,
+                   sideRight:sideRight,
+                   num:num
+               }
+           }
+           //左斜方向
+           function getNextInfoYX(i,j,chessColor) {
+               var num = 1;
+               var sideLeft = false;
+               var sideRight = false;
+               for(var start=i-1,start2=j-1;start >= 0 && start2 >= 0;start--,start2--) {
+                    var color = GameControl.hasChess(start,start2);
+                    if(!color) {
+                        sideLeft = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+               for(var start=i+1,start2=j+1;start<15 && start2<15;start++,start2++) {
+                    var color = GameControl.hasChess(start,start2);
+                    if(!color) {
+                        sideRight = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+               return {
+                   sideLeft:sideLeft,
+                   sideRight:sideRight,
+                   num:num
+               }
+           }
+           //右斜方向
+           function getNextInfoXY(i,j,chessColor) {
+               var num = 1;
+               var sideLeft = false;
+               var sideRight = false;
+               for(var start=i-1,start2=j+1;start >= 0 && start2 < 15 ;start--,start2++) {
+                    var color = GameControl.hasChess(start,start2);
+                    if(!color) {
+                        sideLeft = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+
+               for(var start=i+1,start2=j-1;start<15 && start2>=0;start++,start2--) {
+                    var color = GameControl.hasChess(start,start2);
+                    if(!color) {
+                        sideRight = true;
+                        break;
+                    }else if(color && color == chessColor) {
+                        num++;
+                        continue;
+                    }
+                    break;
+               }
+               return {
+                   sideLeft:sideLeft,
+                   sideRight:sideRight,
+                   num:num
+               }
+           }
+           //计算权重
+           function weightStatus(sideLeft,sideRight,num,isAI) {
+                var weight = 0;  
+                switch (num) {  
+                    case 1:  
+                        if (sideLeft && sideRight) {  
+                            weight = isAI ? 15 : 10;//一  
+                        }  
+                        break;  
+                    case 2:  
+                        if (sideLeft && sideRight) {  
+                            weight = isAI ? 100 : 50;//活二  
+                        }  
+                        else if (sideLeft || sideRight) {  
+                            weight = isAI ? 10 : 5;//死二  
+                        }  
+                        break;  
+                    case 3:  
+                        if (sideLeft && sideRight) {  
+                            weight = isAI ? 500 : 200;//活三  
+                        }  
+                        else if (sideLeft || sideRight) {  
+                            weight = isAI ? 30 : 20;//死三  
+                        }  
+                        break;  
+                    case 4:  
+                        if (sideLeft && sideRight) {  
+                            weight = isAI ? 5000 : 2000;//活四  
+                        }  
+                        else if (sideLeft || sideRight) {  
+                            weight = isAI ? 400 : 100;//死四  
+                        }  
+                        break;  
+                    case 5:  
+                        weight = isAI ? 10000 : 10000;//五  
+                        break;  
+                    default:  
+                        weight = isAI ? 500000 : 250000;  
+                        break;  
+                }  
+                return weight;  
+           }
+           //第一步棋
+           function getFirstPoint(x,y) {  
+                var point = {};
+                //获取游戏参数
+                var gameinfo = GameControl.getInfo();
+                //棋盘大小
+                var board_size = gameinfo.board_size;
+                if(x < 3 || x > board_size - 3 || y < 3 || y > board_size - 3){  
+                    point.x = board_size >> 1;  
+                    point.y = board_size >> 1;  
+                }else{  
+                    var direction = Math.floor(Math.random() * 7 + 1);  
+                    switch(direction){  
+                        case directionMap.top:
+                            point.x = x;  
+                            point.y = y - 1;  
+                            break;  
+                        case directionMap.bottom:  
+                            point.x = x;
+                            point.y = y + 1;  
+                            break;  
+                        case directionMap.left:  
+                            point.x = x - 1;  
+                            point.y = y;
+                            break;  
+                        case directionMap.right:  
+                            point.x = x + 1;  
+                            point.y = y;
+                            break;  
+                        case directionMap.left_top:  
+                            point.x = x - 1;  
+                            point.y = y - 1;  
+                            break;  
+                        case directionMap.left_bottom:  
+                            point.x = x - 1;  
+                            point.y = y + 1;  
+                            break;  
+                        case directionMap.right_top:  
+                            point.x = x + 1;  
+                            point.y = y - 1;  
+                            break;  
+                        case directionMap.right_bottom:  
+                            point.x = x + 1;  
+                            point.y = y + 1;  
+                            break;  
+                        default:  
+                            point.x = x - 1;  
+                            point.y = y - 1;  
+                            break;  
+                    }  
+                }  
+                return point;  
+            }
+           //思考 
+           function think(isFirst,x,y) {
+               if(isFirst) {
+                   return getFirstPoint(x,y)
+               }
+               //获取游戏参数
+               var gameinfo = GameControl.getInfo();
+               //棋盘大小
+               var board_size = gameinfo.board_size;
+               var point = {};
+               var max = -100;
+               var temp_point;
+               outer:
+               for (var i = board_size - 1; i >= 0; i--) {  
+                    for (var j = board_size - 1; j >= 0; j--) {  
+                        if (GameControl.hasChess(i,j)) {  
+                            continue;  
+                        }  
+                        temp_point = computeWeight(i, j);  
+                        if (temp_point > max) {  
+                            max = temp_point;  
+                            point.x = i;  
+                            point.y = j;  
+                        }  
+                    }  
+               }
+               return point;
+           }
+           //是否胜利
+           //判断是否胜出，胜返回true否则返回false  
+           //思路：从下子的地方为中心朝4个方向判断，若连成五子，遇空子或敌方棋子则改变方向则胜出  
+           //不用全盘遍历，因为只有下子的地方才会有胜出的可能  
+           function isWin(x,y,isAI) {
+               //获取游戏参数
+               var gameinfo = GameControl.getInfo();
+               //棋盘大小
+               var board_size = gameinfo.board_size;  
+               //棋子颜色 
+               var chessColor = gameinfo.chessColor;
+               var checkcolor = isAI ? chessColor.ai : chessColor.player;
+               
+               var count = 0;
+               //判断水平是否有5个
+               for(var i=x;i>=0;i--) {
+                    var isSame = gameinfo.map[i][y] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               for(var i=x+1;i<board_size;i++) {
+                    var isSame = gameinfo.map[i][y] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               if(count>=5) return true;
+
+               count = 0; 
+               //判断垂直是否有5个
+               for(var i=y;i>=0;i--) {
+                    var isSame = gameinfo.map[x][i] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               for(var i=y+1;i<board_size;i++) {
+                    var isSame = gameinfo.map[x][i] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               if(count>=5) return true;
+
+               count = 0; 
+
+               //判断左斜是否有5个
+               for(var i=x,j=y;i>=0&&j>=0;i--,j--) {
+                    var isSame = gameinfo.map[i][j] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               for(var i=x+1,j=y+1;i<board_size&&j<board_size;i++,j++) {
+                    var isSame = gameinfo.map[i][j] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               if(count>=5) return true;
+
+               count = 0; 
+
+               //判断右斜是否有5个
+               for(var i=x,j=y;i>=0&&j<board_size;i--,j++) {
+                    var isSame = gameinfo.map[i][j] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               for(var i=x+1,j=y+1;i<board_size&&j>=0;i++,j--) {
+                    var isSame = gameinfo.map[i][j] == checkcolor;
+                    if(isSame) {
+                        count++;
+                    }else {
+                        break;
+                    }
+               }
+               if(count>=5) return true;
+
+               return false;
+           }
+           return {
+               computeWeight:computeWeight,
+               think:think,
+               isWin:isWin
+           }
+        })();
+
+        var GameControl = (function() {
+            var context;
+            var map = new Array();//0:空 1:玩家 2：AI
+            var chessColor = {
+                player:1,
+                ai:2
+            }
+            var step = [];
+            var board_size = 15;
+            function init() {
+                var chess = document.getElementById("chess");
+                context = chess.getContext('2d');
+                context.strokeStyle = '#000'; //边框颜色
+
+                drawChessBoard();
+
+                for(var i=0;i<15;i++) {
+                    map[i] = new Array();
+                    for(var j=0;j<15;j++) {
+                         map[i][j] = 0;
+                    }
+                }
+                
+                bindEvent();
+            }
+            //绘制棋盘 
+            function drawChessBoard(){
+                for(var i = 0; i < 15; i++){
+                    context.moveTo(15 + i * 30 , 15);
+                    context.lineTo(15 + i * 30 , 435);
+                    context.stroke();
+                    context.moveTo(15 , 15 + i * 30);
+                    context.lineTo(435 , 15 + i * 30);
+                    context.stroke();
+                }
+                drawPoint(3,3);
+                drawPoint(3,7);
+                drawPoint(3,11);
+                drawPoint(7,3);
+                drawPoint(7,7);
+                drawPoint(7,11);
+                drawPoint(11,3);
+                drawPoint(11,7);
+                drawPoint(11,11);
+            }
+            //绘制棋盘上的点
+            function drawPoint(i,j) {
+                context.beginPath();
+                context.arc(15 + i * 30, 15 + j * 30, 3, 0, 2 * Math.PI);//画圆
+                context.closePath();
+                context.fillStyle = "#000";
+                context.fill();
+            }
+            //下棋
+            function oneStep(i,j,isAi){
+                context.beginPath();
+                context.arc(15 + i * 30, 15 + j * 30, 15, 0, 2 * Math.PI);//画圆
+                context.closePath();
+                //渐变
+                var gradient = context.createRadialGradient(15 + i * 30 + 2, 15 + j * 30 - 2, 15, 15 + i * 30 + 2, 15 + j * 30 - 2, 0);
+
+                if(isAi){
+                    gradient.addColorStop(0,'#d1d1d1');
+                    gradient.addColorStop(1,'#f9f9f9');
+                }else{
+                    gradient.addColorStop(0,'#0a0a0a');
+                    gradient.addColorStop(1,'#636766');
+                }
+                context.fillStyle = gradient;
+                context.fill();
+
+                map[i][j] = isAi ? 2 : 1;
+                step.push({
+                    x:i,
+                    y:j,
+                    user:isAi ? "ai" : "player"
+                });
+            }
+            //判断有没有棋
+            function hasChess(i,j) {
+                return map[i][j];
+            }
+            //获得棋盘的信息
+            function getInfo() {
+                 return {
+                     chessColor:chessColor,
+                     map:map,
+                     board_size:board_size
+                 };
+            }
+            var iswin = false;
+            function bindEvent() {
+                chess.onclick = function(event) {
+                    if(iswin) return;
+                    var x = event.offsetX;
+                    var y = event.offsetY;
+                    var i = Math.floor(x/30);
+                    var j = Math.floor(y/30);
+                    if(hasChess(i,j)) {
+                        alert("亲，这里已经下过了");
+                        return;
+                    }
+                    oneStep(i,j,false);
+                    iswin = AI.isWin(i,j,false);
+                    if(iswin) {
+                        setTimeout(function(){
+                            alert("你赢了");
+                            location.reload();
+                        },100);
+                    }
+                    var isFirst = step.length == 1;
+                    var point = AI.think(isFirst,i,j);
+                    oneStep(point.x,point.y,true);
+                    iswin = AI.isWin(point.x,point.y,true);
+                    if(iswin) {
+                        setTimeout(function(){
+                            alert("你输了");
+                            location.reload();
+                        },100);
+                    }
+                }
+            } 
+            return {
+                init:init,
+                oneStep:oneStep,
+                hasChess:hasChess,
+                getInfo:getInfo
+            }
+        })();
+
+        GameControl.init();
+   </script>
+</body>    
+</html>    
