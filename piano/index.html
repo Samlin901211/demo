@@ -128,7 +128,13 @@
                     var dataOrder = $(this).attr("data-order");
                     var target = $(event.target);
                     if(!target || target.attr("data-order") != dataOrder) return;
-                    $(this).addClass("keyboardactive");  
+                    if($(this).hasClass("keyboard-black")) {
+                         $(this).css({
+                            backgroundColor:"#DFFF30"
+                         });  
+                    }else {
+                          $(this).addClass("keyboardactive"); 
+                    }
                     var bufferSource = ctx.createBufferSource();
                         bufferSource.buffer = musicData;
                         bufferSource.playbackRate.value = frequencyRatio;
@@ -138,7 +144,13 @@
 
                 keyboard.addEventListener(isSP ? 'touchend' : 'mouseup', function(event) {
                     event.stopPropagation();
-                    $(".keyboardactive").removeClass("keyboardactive");  
+                    if($(this).hasClass("keyboard-black")) {
+                        $(this).css({
+                            backgroundColor:"black"
+                        });  
+                    }else {
+                        $(".keyboardactive").removeClass("keyboardactive"); 
+                    } 
                 });
             });    
         })();
