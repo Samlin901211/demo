@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Record</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="format-detection" content="telephone=no">
+</head>
+<body>
+<script type="text/javascript">
+
+var ctx,mediaRecorder;
+
+// 初始化AudioContext
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+ctx = new AudioContext(); 
+
+//navigator
+navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+getSpeaker();
+function getSpeaker() {
+    if(!navigator.getUserMedia){ 
+        alert('不支持麦克风录音');
+        return;
+    }
+    var p = navigator.mediaDevices.getUserMedia({ audio: true });
+    p.then(function(mediaStream) {
+        alert(123123)
+        var video = document.querySelector('video');
+        video.src = window.URL.createObjectURL(mediaStream);
+        video.onloadedmetadata = function(e) {
+            // Do something with the video here.
+        };
+    });
+
+    p.catch(function(err) { 
+        alert(err.name); 
+    });
+
+}
+</script>
+</body>
+</html>
