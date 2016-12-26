@@ -1,0 +1,170 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>密码</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="applicable-device" content="mobile">
+	<style>
+	    body{margin:0;padding:0;}
+		#resultwrap{
+			text-align:center;
+			width:100%;
+		}
+		#button{
+			display:block;
+			width:100px;
+			margin:10px auto;
+			text-align:center;
+		}
+	</style>
+</head>
+<body>
+<div id="code"></div>	
+<div id="resultwrap">您的滑动轨迹:<span id="result"></span></div>
+<button id="button" type="button">清除</button>
+<script src="zepto.js"></script>
+<script>
+   (function ($) {
+	   $.fn.unlock = function(option) {
+		    var that = this,ctx,canvas,width,height,ins_width,ins_height,points,path,keyPath;
+            var points = [];//每个点的位置信息
+			var path = [];//滑动路径
+            
+			//初始化
+            $(that).append("<canvas></canvas>");
+			canvas = $(that).find("canvas").eq(0).get(0);
+			ctx = canvas.getContext('2d');
+			width = $(that).width() || screen.width;
+			height = $(that).width() || screen.width;
+			canvas.width = width < height ? width : height;
+			canvas.height = canvas.width;
+			ins_width = width/7;
+			ins_height = height/7;
+
+			//绘制
+			strokeArc();
+			
+			canvas.addEventListener("touchstart",function(event){
+					event.preventDefault();
+					if(event.touches.length > 1) return;
+					var touch = event.touches[0];
+					var x = touch.clientX - $(canvas).offset().left;
+					var y = touch.clientY - $(canvas).offset().top;
+					//查看哪个按钮被选中
+					var point = checkPointTouch(x,y); 
+					if(point) {
+						path.push(point); 
+						fillPoint(point.x,point.y)
+						canvas.addEventListener("touchmove",function(event){
+								var touch = event.touches[0];
+								var x = touch.clientX - $(canvas).offset().left;
+								var y = touch.clientY - $(canvas).offset().top;
+								//查看哪个按钮被选中
+								var point = checkPointTouch(x,y); 
+								console.log(point)
+								var prepoint = path[path.length-1];
+								if(point && prepoint && point.index != prepoint.index) {
+									//填充点
+									if(!point.hasFill) {
+										fillPoint(point.x,point.y);
+										point.hasFill = true;
+									} 
+									//连接线
+									makeLine(point,prepoint);
+									path.push(point);
+								} 
+
+						});
+					} 
+			});
+			
+			canvas.addEventListener("touchend",function(event){
+				//var isCorrect = checkCode();
+				var result = [];
+				path && path.forEach(function(item) {
+					result.push(item.index);
+				});
+				typeof option.getResult == "function" &&  option.getResult(result); 
+			});  
+            
+			//绘制九个圆
+			function strokeArc() {
+				var index = 0;
+				for(var i=0;i<3;i++) {
+					for(var j=0;j<3;j++) {
+						var x = (1 + i*2 + 0.5) * ins_width;
+						var y = (1 + j*2 + 0.5) * ins_height;
+						points.push({
+							index:index++,
+							x:x,
+							y:y,
+							hasFill:false
+						})
+						ctx.save();
+						ctx.translate(x, y);
+						ctx.beginPath();
+						ctx.arc(0, 0, ins_width * 0.5, 0, Math.PI * 2, true);
+						ctx.stroke();
+						ctx.restore();
+					}
+				}
+			}
+
+			//判断是否九个点是否有点被接触 			
+			function checkPointTouch(x,y) {
+				for(var i=0;i<points.length;i++) {
+					point = points[i];
+					var temp_x = Math.abs(x - point.x);
+					var temp_y = Math.abs(y - point.y); 
+					if( Math.sqrt(temp_x*temp_x + temp_y*temp_y) <= ins_width*0.5) {
+							break;
+					}
+				}
+				return i != points.length && point ? point : "";
+			}
+            
+			//填充点~选中点
+			function fillPoint(x,y) {
+				ctx.save();
+				ctx.translate(x, y);
+				ctx.beginPath();
+				ctx.arc(0, 0, ins_width * 0.5, 0, Math.PI * 2, true);
+				ctx.fill();
+				ctx.restore();
+			}
+            
+			//绘制连线
+			function makeLine(point,prePoint) {
+				ctx.beginPath();
+				ctx.moveTo(prePoint.x, prePoint.y);
+				ctx.lineTo(point.x, point.y);
+				ctx.stroke();
+			}
+
+			function reset() {
+				path.length = 0;
+				points.length = 0;
+				ctx.clearRect(0,0,width,width);
+				strokeArc();
+			}
+		    
+		    return {
+			   reset:reset
+		    }
+	   }
+   })(Zepto)
+
+   var code = $("#code").unlock({
+       getResult:function(path) {
+			$("#result").append(JSON.stringify(path));
+	   }
+   });
+
+   $(document).on("click","#button",function() {
+        code.reset();
+   });
+
+</script>
+</body>
+</html>
