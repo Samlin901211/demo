@@ -1,0 +1,184 @@
+[{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"2"   
+},{
+    "tone":"c2",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"1"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"f1",
+    "note":"2"   
+},{
+    "tone":"f1",
+    "note":"3"   
+},{
+    "tone":"f1",
+    "note":"3"   
+},{
+    "tone":"g1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "delay":true,
+    "note":"2"   
+},{
+    "tone":"e1",
+    "note":"3"   
+},{
+    "tone":"e1",
+    "note":"1"   
+},{
+    "tone":"d1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"d1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"d1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"g1",
+    "delay":true,
+    "note":"2"   
+},{
+    "tone":"f1",
+    "note":"3"   
+},{
+    "tone":"f1",
+    "note":"0"   
+},
+{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"g1",
+    "note":"3"   
+},{
+    "tone":"c2",
+    "note":"1"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"c2",
+    "note":"3"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"g1",
+    "note":"3"   
+},{
+    "tone":"c2",
+    "delay":true,
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"d1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"d1",
+    "note":"2"   
+},{
+    "tone":"a1",
+    "note":"2"   
+},{
+    "tone":"g1",
+    "note":"1"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"f1",
+    "note":"1"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"b1",
+    "minus":true,
+    "note":"3"   
+},{
+    "tone":"a1",
+    "note":"3"   
+},{
+    "tone":"f1",
+    "delay":true,
+    "note":"2"   
+},{
+    "tone":"g1",
+    "note":"3"   
+},{
+    "tone":"f1",
+    "note":"4"   
+}]
