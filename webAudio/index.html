@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>WebAudio</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/webaudio.css" type="text/css" />
+</head>
+
+<body>
+    <canvas id="stars"></canvas>
+
+    <div class="wrap">
+        <div class="banner">
+            <div class="title">
+                WebAudio实验室
+                <!--<img class="logo_img" src="//raw.githubusercontent.com/Samlin901211/img/master/qqmusic_logo.jpg"/>-->
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="autoHeight contentleft">
+
+                <div class="userInfo">
+                    <div class="headPic">
+                        <img class="headPic_img" src="//avatars0.githubusercontent.com/u/8406620?v=3&s=460" />
+                    </div>
+                    <div class="name">
+                        您好，tinylin
+                    </div>
+                </div>
+
+                <div class="songlistTitle">播放列表</div>
+
+                <div class="songlist"></div>
+
+                <div class="js_addsong addFile btn btn-success btn-lg">添加</div>
+                <input type="file" id="uploader" style="display:none" />
+            </div>
+
+            <div class="autoHeight contentright">
+                <div class="effecttitle">特效列表</div>
+                <div class="js_effectlist effectlist">
+
+                </div>
+            </div>
+
+            <div class="autoHeight contentmiddle">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <audio id="player" src="" controls="controls"></audio>
+
+</body>
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="./js/stars.js"></script>
+<script src="./js/audio.js"></script>
+<script type="text/javascript">
+    //函数节流
+    function throttle(func) {
+        var time = 200;
+        var isFirst = true;
+        var isWiating = false;
+        return function() {
+            if (isWiating) {
+                return;
+            }
+            if (isFirst) {
+                isFirst = false;
+                return func();
+            }
+            isWiating = true;
+            setTimeout(function() {
+                isWiating = false;
+                func();
+            }, time);
+        }
+    }
+
+    //初始化星空
+    function initStar() {
+        starsCanvas("stars", 230, 1000, 60, 2, 50000, 0.5);
+    }
+
+    //绑定事件
+    function bindEvent() {
+        $(document).on("click", ".js_addsong", function() {
+            $("#uploader").trigger("click");
+        }).on("click", ".js_song", function() {
+            var url = $(this).attr("data-url");
+            Audio.play(url);
+        }).on("click", ".js_effect", function() {
+            var effectid = $(this).attr("data-effect");
+            Audio.changeEffect(effectid);
+        });
+    }
+
+    //自适应
+    function resize() {
+        var handle = throttle(function() {
+            var height = window.innerHeight - 110;
+            var width = window.innerWidth - 500;
+            $(".autoHeight").height(height);
+            Audio.resize(width, height);
+        });
+        handle();
+        window.onresize = handle;
+    }
+
+    //读取文件
+    function listenFile() {
+        var audioInput = document.getElementById("uploader"); //HTML语句：<input type="file" id="uploader" />
+        audioInput.onchange = function() {　　 //文件长度不为0则真的选中了文件，因为用户点击取消也会触发onchange事件。　
+            if (audioInput.files.length !== 0) {　　　　
+                file = audioInput.files[0]; //得到用户选取的文件
+                putInlist(file);　　　　　
+            }
+        };
+    }
+
+    //放进播放队列
+    function putInlist(file) {
+        var fileName = file.name;
+        var url = URL.createObjectURL(file);
+        var position = (fileName.lastIndexOf("."));
+        fileName = fileName.substring(0, position);
+        $(".songlist").append("<div id='" + file.id + "' data-url='" + url + "' class='js_song songitem'>" + fileName + "</div>");
+        Audio.play(url);
+    }
+
+    //加载特效列表
+    function renderEffectList() {
+        var list = Audio.getEffectList();
+        var html = "";
+        list.forEach(function(item) {
+            html += "<div data-effect='" + item.id + "' class='js_effect effectitem'>" + item.name + "</div>";
+        });
+        $(".js_effectlist").html(html);
+    }
+
+    function init() {
+        //1.绑事件
+        bindEvent();
+        //2.初始化星空
+        initStar();
+        //3.初始化WebAudio
+        Audio.init("player", "canvas");
+        //4.设置自适应
+        resize();
+        //5.监听文件
+        listenFile();
+        //6.加载特效列表
+        renderEffectList();
+    }
+
+    $(document).ready(function() {
+        init();
+    });
+</script>
+
+</html>

@@ -7,9 +7,13 @@
 <meta name="format-detection" content="telephone=no">
 </head>
 <body>
+<audio id="recorder" src="" controls="controls" style="width:300px;height:32px;display:block"></audio>  
+<div class="js_start">开始</div>
+<div class="js_stop">停止</div> 
+<script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> 
 <script type="text/javascript">
 
-var ctx,mediaRecorder;
+var ctx,Mrecorder,chunkFile,recorderDom = document.getElementById("recorder");
 
 // 初始化AudioContext
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -19,6 +23,7 @@ ctx = new AudioContext();
 navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
 getSpeaker();
+
 function getSpeaker() {
     if(!navigator.getUserMedia){ 
         alert('不支持麦克风录音');
@@ -26,12 +31,33 @@ function getSpeaker() {
     }
     var p = navigator.mediaDevices.getUserMedia({ audio: true });
     p.then(function(mediaStream) {
-        alert(123123)
-        var video = document.querySelector('video');
-        video.src = window.URL.createObjectURL(mediaStream);
-        video.onloadedmetadata = function(e) {
-            // Do something with the video here.
-        };
+        Mrecorder = new MediaRecorder(mediaStream);
+        chunkFile = [];
+        var source = ctx.createMediaStreamSource(mediaStream);
+        var recorder = ctx.createScriptProcessor(1024,1,1);
+        source.connect(recorder);
+        recorder.connect(ctx.destination);
+        recorder.onaudioprocess =function(e) {
+           var inputBuffer = e.inputBuffer;
+           var outputBuffer = e.outputBuffer;
+
+           for(var channel = 0;channel<outputBuffer.numberOfChannels;channel++) {
+                var inputData = inputBuffer.getChannelData(channel);
+                var outputData = outputBuffer.getChannelData(channel);
+                for(var sample = 0;sample< inputBuffer.length;sample++) {
+                     outputData[sample] = inputData[sample];
+                }
+           }
+        }
+        
+        Mrecorder.onstop = function(e) {
+            var blob = new Blob(chunkFile,{type:"audio/wav"}),url = window.URL.createObjectURL(blob);
+            recorderDom.src = url; 
+        }
+
+        Mrecorder.ondataavailable = function(e) {
+            chunkFile.push(e.data);
+        }
     });
 
     p.catch(function(err) { 
@@ -39,6 +65,15 @@ function getSpeaker() {
     });
 
 }
+
+$(document).on("click",".js_start",function() {
+   chunkFile = [];
+   Mrecorder.start();
+   console.log(Mrecorder.state)
+}).on("click",".js_stop",function() {
+   Mrecorder.stop();
+   console.log(Mrecorder.state)
+})
 </script>
 </body>
 </html>
