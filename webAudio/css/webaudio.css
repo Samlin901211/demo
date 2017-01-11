@@ -1,110 +1,274 @@
 body {
-  margin:0;
-  padding:0;   
-  min-width:1024px; 
-  overflow:hidden; 
-  font-family:"微软雅黑";
-  color:#FFF;
-  font-size:20px;
-  background:url("../img/timg.jpg") center;
+    margin: 0;
+    padding: 0;
+    min-width: 1024px;
+    overflow: hidden;
+    font-family: "微软雅黑";
+    color: #FFF;
+    font-size: 20px;
+    /*background: url("../img/timg.jpg") center;*/
 }
+
 .wrap {
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
+
 .banner {
-  width:100%;
+    width: 100%;
 }
+
 .title {
-   position:relative;
-   height:100px;
-   line-height:100px;
-   font-size:40px;
-   width:330px;
-   margin:0 auto;
+    position: relative;
+    height: 100px;
+    line-height: 100px;
+    font-size: 40px;
+    width: 330px;
+    margin: 0 auto;
 }
+
 .logo_img {
-  position:absolute;
-  width:40px;
-  left:-21%;  
-  top:30%;
+    position: absolute;
+    width: 40px;
+    left: -21%;
+    top: 30%;
 }
+
 .content {
-   height: 100%; 
-   overflow:hidden;
+    height: 100%;
+    overflow: hidden;
 }
-.contentleft{
-   float:left; 
-   position:relative;
-   width:200px;
+
+.contentleft {
+    float: left;
+    position: relative;
+    width: 200px;
 }
-.contentmiddle{ 
-   position:relative;
-   margin-left:250px;
-   margin-right:250px; 
+
+.contentmiddle {
+    position: relative;
+    margin-left: 250px;
+    margin-right: 250px;
 }
-.contentright{
-   float:right;
-   width:200px;
+
+.contentright {
+    float: right;
+    width: 200px;
 }
+
 .userInfo {
-  width:100%;  
-  overflow:hidden;
+    width: 100%;
+    overflow: hidden;
 }
+
 .userInfo .name {
-  height:50px;
-  line-height:50px;
-  font-size:16px;
-  text-align:center;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    text-align: center;
 }
+
 .headPic {
-  height:100px;
-  width:100px;
-  border-radius:50px;
-  margin:0 auto;
-  overflow:hidden;
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    margin: 0 auto;
+    overflow: hidden;
 }
-.headPic_img{
-  width:100%;
+
+.headPic_img {
+    width: 100%;
 }
-.effecttitle,.songlistTitle {
-  width:100%;
-  font-size:30px;
-  text-align:center;
+
+.effecttitle,
+.songlistTitle {
+    width: 100%;
+    font-size: 30px;
+    text-align: center;
 }
-.effectlist,.songlist {
-  cursor:pointer;
-  width:100%;
-  text-align:center;
+
+.effectlist,
+.songlist {
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
 }
-.effectitem,.songitem {
-  height:50px; 
-  line-height:50px; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+.effectitem,
+.songitem {
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 .addFile {
-  position:absolute;
-  bottom:0;
-  left:0;
-  width:100%;
-  text-align:center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
 }
+
+.recorderbtn {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.kgbtn {
+    position: absolute;
+    bottom: 120px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.cutbtn {
+    position: absolute;
+    bottom: 180px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
 #stars {
-  position:absolute;
-  width:100%;
-  height:100%;
-  top:0;left:0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
 }
+
 #player {
-  width:500px;
-  display:block;
-  position:absolute;
-  top:100px;
-  left:50%;
-  margin-left:-250px;
+    width: 500px;
+    display: block;
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    margin-left: -250px;
+}
+
+#eq {
+    display: none;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    width: 430px;
+    height: 190px;
+    margin-left: -215px;
+}
+
+#eq input {
+    transform: rotate(-90deg);
+    position: absolute;
+    width: 100px;
+    left: 0;
+    top: 90px;
+}
+
+#eq input:nth-child(2) {
+    left: 40px;
+}
+
+#eq input:nth-child(3) {
+    left: 80px;
+}
+
+#eq input:nth-child(4) {
+    left: 120px;
+}
+
+#eq input:nth-child(5) {
+    left: 160px;
+}
+
+#eq input:nth-child(6) {
+    left: 200px;
+}
+
+#eq input:nth-child(7) {
+    left: 240px;
+}
+
+#eq input:nth-child(8) {
+    left: 280px;
+}
+
+#eq input:nth-child(9) {
+    left: 320px;
+}
+
+#eq input:nth-child(10) {
+    left: 360px;
+}
+
+#eq .max {
+    position: absolute;
+    top: 44px;
+}
+
+#eq .min {
+    position: absolute;
+    top: 128px;
+}
+
+#eq .hzwrap {
+    position: absolute;
+    top: 160px;
+    left: 37px;
+}
+
+#eq .hzwrap span {
+    margin-right: 6px;
+}
+
+#pannerNode {
+    display: none;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    width: 500px;
+    height: 190px;
+    margin-left: -250px;
+}
+
+#pannerNode img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -95px;
+    margin-top: -26px;
+}
+
+#recorder {
+    display: none;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    width: 500px;
+    height: 190px;
+    margin-left: -250px;
+}
+
+#recorder div {
+    width: 100%;
+    text-align: center;
+}
+
+#gainNode,
+#stereoNode {
+    display: none;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    width: 430px;
+    height: 190px;
+    margin-left: -215px;
 }
