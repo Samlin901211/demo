@@ -68,7 +68,6 @@ function getSource() {
             function(_data) {
                 musicData = _data;
                 bindEvent();
-                getSong(playSong)
             },
             function(e) {
                 alert(e.err);
@@ -79,9 +78,9 @@ function getSource() {
 }
 
 //获取歌曲json
-function getSong(cb) {
+function getSong(songname,cb) {
     $.ajax({
-        url:"./json/happynewyear.json",
+        url:"./json/" + songname + ".json",
         dataType:"json",
         success:function(song) {
             cb(song);
@@ -163,7 +162,7 @@ function playSong(song) {
             button.trigger("mouseup");
         },100);
     }
-    var int = setInterval(function(){
+    int = setInterval(function(){
             if(isPlay) return;
             if(index == song.length) {
                 clearInterval(int);
@@ -192,7 +191,7 @@ function playSong(song) {
     },70);
 }
 
-var ctx,musicData;
+var ctx,musicData,int;
 
 // 初始化AudioContext
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -201,3 +200,9 @@ ctx = new AudioContext();
 drawPiano();
 
 getSource();
+
+$(document).on("click",".js_play",function() {
+    var song = $(this).attr("data-song");
+    int && clearInterval(int);
+    getSong(song,playSong);
+});

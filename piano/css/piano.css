@@ -15,6 +15,9 @@ html, body, ul {
 li {
     list-style: none;
 }
+.keyboard_wrap {
+    overflow:hidden;
+}
 .keyboard {
     transition: background-color .1s ease 0s;
     cursor:pointer;

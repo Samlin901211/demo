@@ -5,11 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <title>WebAudio Piano</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/piano.css" type="text/css"/>
 </head>
 <body>
-    <div class="js_keyboards"></div>
+    <div class="js_keyboards keyboard_wrap"></div>
+    <br/>
+    <div>
+		<button data-song="happynewyear" class="js_play btn btn-success">播放 新年快乐</button>
+		<button data-song="flybug" class="js_play btn btn-danger">播放 虫儿飞</button>
+    </div>
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="./js/piano.js"></script>
 </body>
 </html>
