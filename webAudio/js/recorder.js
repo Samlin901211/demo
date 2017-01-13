@@ -50,7 +50,7 @@ var Recorder = (function() {
             });
 
             p.catch(function(err) {
-                alert(err.name);
+                alert("您没有麦克风设备，请插入设备");
             });
 
         }
