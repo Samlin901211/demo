@@ -9,11 +9,11 @@ var Audio =
             handle: delevevoice
         }, {
             id: "1",
-            name: "Gainnode",
+            name: "音量调节",
             handle: gainNodeEffect
         }, {
             id: "2",
-            name: "delay",
+            name: "延迟",
             handle: delayEffect
         }, {
             id: "3",
@@ -33,7 +33,7 @@ var Audio =
             handle: CompressDynamicEffect
         }, {
             id: 7,
-            name: "stereoPanner",
+            name: "左右声道调节",
             handle: stereoPannerEffect
         }, {
             id: 8,
@@ -41,7 +41,7 @@ var Audio =
             handle: waveShaperEffect
         }, {
             id: 9,
-            name: "rotate3D",
+            name: "环绕3D",
             handle: rotate3DEffect
         }];
 
