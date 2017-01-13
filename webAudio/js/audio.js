@@ -583,7 +583,7 @@ var Audio =
             var gain = audioCtx.createGain();
             var gain2 = audioCtx.createGain();
             //模拟混响样本
-            var length = 44100;
+            var length = 48000 || 44100;
             var buffer = audioCtx.createBuffer(2, length, length);
             var data = [buffer.getChannelData(0), buffer.getChannelData(1)];
             for (var i = 0; i < length; i++) {
