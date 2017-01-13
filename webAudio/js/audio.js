@@ -143,7 +143,7 @@ var Audio =
             var x = 0;
 
             for (var i = 0; i < bufferLength; i++) {
-                barHeight = dataArray[i] * 5;
+                barHeight = dataArray[i] * 3;
                 canvasCtx.fillStyle = '#8A2BE2'　 || 　'rgb(' + (barHeight + 100) + ',50,50)';
                 canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
                 x += barWidth + 1;
