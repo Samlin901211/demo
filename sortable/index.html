@@ -22,7 +22,7 @@
 </style>
 </head>
 <body>
-<div style="height:300px">
+<div class="js_wrap" style="height:300px">
 	<h1>横向排序</h1>
 	<div id="test" style="width:300px;overflow:hidden">
 	    <div data-page class="cont hori" style="background-color:orange"></div>
@@ -31,7 +31,7 @@
 	</div>
 </div>
 
-<div style="height:300px">
+<div class="js_wrap" style="height:600px">
 	<h1>纵向排序</h1>
 		<div id="test2" style="width:300px;overflow:hidden">
 		    <div data-page class="cont vert" style="background-color:orange"></div>
@@ -44,9 +44,27 @@
 <script src="./sortable.js"></script>
 <script>
     $("#test").sortable({
-    	orient:"horizental"
+    	beforeSort:function() {
+    		$(".js_wrap").on("touchstart touchmove touchend", function (e) {
+                e.preventDefault();
+            });
+        },
+    	orient:"horizental",
+    	afterSort:function() {
+    		$(".js_wrap").off("touchstart touchmove touchend");
+    	}
     });
 
-    $("#test2").sortable();
+    $("#test2").sortable({
+    	beforeSort:function() {
+    		$(".js_wrap").on("touchstart touchmove touchend", function (e) {
+                e.preventDefault();
+            });
+        },
+    	orient:"vertical",
+    	afterSort:function() {
+    		$(".js_wrap").off("touchstart touchmove touchend");
+    	}
+    });
 </script>
 </html>
