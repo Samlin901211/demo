@@ -92,7 +92,7 @@
                         collectPos[tinyid].top = curPreTop;
                         var $changeEle = $(selector).find("[data-tinyid='" + tinyid + "']");//需要和被拖动元素交换位置的dom
                         $changeEle.css("top", curPreTop);
-                        down ? $changeEle.insertBefore($moveEle) : $changeEle.insertAfter($moveEle);
+                        isDown ? $changeEle.insertBefore($moveEle) : $changeEle.insertAfter($moveEle);
                         break;
                     }
                 }
