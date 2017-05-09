@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>拖动排序</title>
+<meta name="description" content="数字专辑是一种基于互联网，对在线音乐进行包装、售卖、消费的全新音乐分发模式。QQ音乐数字专辑在满足用户便捷享受正版音乐同时以铭牌、独家礼包等增值服务为用户提供尊贵珍藏体验。" />
+<meta name="keywords" content="数字专辑,数字音乐专辑,qq音乐数字专辑,最新专辑,高品质音乐,专属铭牌,qq音乐" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+<meta name="format-detection" content="telephone=no">
+<meta name="applicable-device" content="mobile">
+<link rel="dns-prefetch" href="c.y.qq.com" />
+<style>    
+.hori {
+   width:100px;
+   height:100px;
+   float:left;
+}
+.vert {
+   width:100px;
+   height:100px;
+}
+</style>
+</head>
+<body>
+<div style="height:300px">
+	<h1>横向排序</h1>
+	<div id="test" style="width:300px;overflow:hidden">
+	    <div data-page class="cont hori" style="background-color:orange"></div>
+	    <div data-page class="cont hori" style="background-color:yellowgreen"></div>
+	    <div data-page class="cont hori" style="background-color:pink"></div>
+	</div>
+</div>
+
+<div style="height:300px">
+	<h1>纵向排序</h1>
+		<div id="test2" style="width:300px;overflow:hidden">
+		    <div data-page class="cont vert" style="background-color:orange"></div>
+		    <div data-page class="cont vert" style="background-color:yellowgreen"></div>
+		    <div data-page class="cont vert" style="background-color:pink"></div>
+		</div>
+	</div>
+</body>
+<script src="http://y.gtimg.cn/music/h5/lib/js/zepto-1.0.min.js?max_age=604800"></script>
+<script src="./sortable.js"></script>
+<script>
+    $("#test").sortable({
+    	orient:"horizental"
+    });
+
+    $("#test2").sortable();
+</script>
+</html>
