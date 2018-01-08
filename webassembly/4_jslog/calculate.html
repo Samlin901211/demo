@@ -1,0 +1,16 @@
+<script type='text/javascript' src='../loadAssembly.js'></script>
+<script type='text/javascript'>
+    let imports = {
+        env: {
+            _jslog: (msg) => {
+                console.log(msg);
+            }
+        }
+    }
+    loadWebAssembly('calculate.wasm', imports).then((instance) => {
+        const add = instance.exports._add; //需要 _ 前缀
+        const minus = instance.exports._minus;
+        console.log('1 + 2 = ' + add(1, 2));
+        console.log('3 - 2 = ' + minus(3, 2));
+    });
+</script>
