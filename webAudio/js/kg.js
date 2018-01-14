@@ -75,7 +75,7 @@ var kg = (function() {
             source.connect(recorder);
 
             recorder.connect(ctx.destination);
-            recorder.connect(ctx.destination);
+            //recorder.connect(ctx.destination);
 
             recorder.onaudioprocess = function(e) {
                 var inputBuffer = e.inputBuffer;

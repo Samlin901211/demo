@@ -8,7 +8,7 @@ function loadWebAssembly(filename, imports = {}) { //1.加载wasm文件
                 memoryBase: 0,
                 tableBase: 0,
                 //内存分配
-                memory: new WebAssembly.Memory({ initial: 256, maximum: 256 }), //一页64kB
+                memory: new WebAssembly.Memory({ initial: 2560, maximum: 2560 }), //一页64kB
                 table: new WebAssembly.Table({
                     initial: 0,
                     maximum: 0,

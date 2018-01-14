@@ -1,0 +1,27 @@
+<script type='text/javascript' src='../loadAssembly.js'></script>
+<script type='text/javascript'>
+    let imports = {
+        env: {
+            _jslog: (msg) => {
+                console.log(msg);
+            }
+        }
+    }
+    loadWebAssembly('quicksort.wasm', imports).then((instance) => {
+        const quicksort = instance.exports._quicksort;
+
+        let memory = imports.env.memory;
+        let memData = new Uint32Array(memory.buffer);
+        let start = Date.now();
+        for (let i = 0; i < 50000; i++) {
+            memData[i] = Math.floor(Math.random() * 10);
+        }
+        console.log(memData)
+        var a = quicksort(0,0,49999);
+        //for (let i = 0; i < 100000; i++) {
+            console.log(memData);
+        //}
+        let end = Date.now();
+        console.log((end - start) + "ms");
+    });
+</script>
